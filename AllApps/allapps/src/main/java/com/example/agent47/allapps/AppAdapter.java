@@ -1,11 +1,9 @@
 package com.example.agent47.allapps;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,7 +24,7 @@ public class AppAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private List<AppList> appLists;
 
-    public AppAdapter(Context context,List<AppList> appLists) {
+    AppAdapter(Context context,List<AppList> appLists) {
         layoutInflater = (LayoutInflater.from(context));
         this.appLists = appLists;
     }

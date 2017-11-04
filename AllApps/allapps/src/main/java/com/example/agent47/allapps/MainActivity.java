@@ -1,5 +1,6 @@
 package com.example.agent47.allapps;
 
+import android.app.WallpaperManager;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
@@ -7,32 +8,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
+import android.widget.GridView;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
+    private List<AppList> appLists;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ListView installedApps = (ListView)findViewById(R.id.installed_apps_list);
-        final List<AppList> appLists = getInstalledApps();
+        setWallpaper();
+        GridView installedApps = (GridView) findViewById(R.id.installed_apps_list);
+        appLists = getInstalledApps();
         AppAdapter adapter = new AppAdapter(this,appLists);
         installedApps.setAdapter(adapter);
-        installedApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                AppList pack = appLists.get(position);
-                ApplicationInfo app = pack.getPackageInfo().applicationInfo;
-                startActivity(getPackageManager().getLaunchIntentForPackage(app.packageName));
-            }
-        });
+        installedApps.setOnItemClickListener(this);
     }
 
     private List<AppList> getInstalledApps() {
@@ -53,4 +48,17 @@ public class MainActivity extends AppCompatActivity {
         return ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
     }
 
+    private void setWallpaper() {
+        WallpaperManager manager = WallpaperManager.getInstance(this);
+        Drawable wallpaper = manager.getFastDrawable();
+        RelativeLayout layout = (RelativeLayout)findViewById(R.id.main);
+        layout.setBackground(wallpaper);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        AppList pack = appLists.get(position);
+        ApplicationInfo app = pack.getPackageInfo().applicationInfo;
+        startActivity(getPackageManager().getLaunchIntentForPackage(app.packageName));
+    }
 }
